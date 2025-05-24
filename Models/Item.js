@@ -16,7 +16,7 @@ const itemSchema = new mongoose.Schema({
       },
       pricePerItem: {
         type: Number,
-        required: true,
+        required: false,
       },
     itemName: {
         type: String,
