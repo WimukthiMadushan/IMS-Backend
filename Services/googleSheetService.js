@@ -10,14 +10,21 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const auth = new GoogleAuth({
-  keyFile: path.join(__dirname, '../Config/google-service-account.json'),
+const credentials = JSON.parse(Buffer.from(process.env.GOOGLE_SERVICE_ACCOUNT_BASE64, 'base64').toString());
+
+if (!process.env.GOOGLE_SERVICE_ACCOUNT_BASE64) {
+  throw new Error('Missing GOOGLE_SERVICE_ACCOUNT_BASE64 in environment');
+}
+
+const auth = new google.auth.GoogleAuth({
+  credentials,
   scopes: ['https://www.googleapis.com/auth/spreadsheets'],
 });
 
 const SPREADSHEET_ID = process.env.GOOGLE_SHEET_ID;
 
 export async function writeToItemSheet(itemName, dataRow = [], addHeader = false, siteNames = []) {
+  console.log(`[Sheet] Writing to item sheet "${itemName}" with data:`, dataRow);
 
   const client = await auth.getClient();
   const sheets = google.sheets({ version: 'v4', auth: client });

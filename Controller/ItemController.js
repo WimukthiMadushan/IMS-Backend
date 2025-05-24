@@ -162,6 +162,8 @@ export const AddItem = async (req, res) => {
       const siteQuantities = filteredSiteNames.map(() => 0);
       const dataRow = [dateStr, timeStr, savedItem.quantity, ...siteQuantities];
 
+      //console.log("write To Item Sheet:", dataRow);
+
       await writeToItemSheet(savedItem.itemName, dataRow, true, siteNames);
     } catch (txnErr) {
       console.error("Transaction save failed:", txnErr.message);
